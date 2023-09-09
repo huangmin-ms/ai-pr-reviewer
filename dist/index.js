@@ -3558,8 +3558,7 @@ class AzureBot {
         let response;
         if (this.api != null) {
             const opts = {
-                model: this.openaiOptions.model,
-                maxTokens: this.openaiOptions.tokenLimits.maxTokens,
+                maxTokens: this.openaiOptions.tokenLimits.responseTokens,
                 temperature: this.options.openaiModelTemperature
             };
             //   if (ids.parentMessageId) {
@@ -3571,6 +3570,7 @@ class AzureBot {
             ];
             console.log(`open ai model: ${this.openaiOptions.model}`);
             console.log(`prompt message: ${JSON.stringify(messages)}`);
+            console.log(`options: ${JSON.stringify(opts)}`);
             try {
                 response = await pRetry(() => this.api.getChatCompletions(this.openaiOptions.model, messages, opts), {
                     retries: this.options.openaiRetries
