@@ -3519,9 +3519,17 @@ class AzureBot {
     api = null; // not free
     options;
     openaiOptions;
+    systemMessage;
     constructor(options, openaiOptions) {
         this.options = options;
         this.openaiOptions = openaiOptions;
+        const currentDate = new Date().toISOString().split('T')[0];
+        this.systemMessage = `${options.systemMessage} 
+    Knowledge cutoff: ${openaiOptions.tokenLimits.knowledgeCutOff}
+    Current date: ${currentDate}
+    
+    IMPORTANT: Entire response must be in the language with ISO code: ${options.language}
+        `;
         if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_BASE_URL) {
             this.api = new OpenAIClient(process.env.OPENAI_API_BASE_URL, new core_auth_dist.AzureKeyCredential(process.env.OPENAI_API_KEY));
         }
@@ -3557,10 +3565,14 @@ class AzureBot {
             //   if (ids.parentMessageId) {
             //     opts.parentMessageId = ids.parentMessageId
             //   }
+            const messages = [
+                { role: "system", content: this.systemMessage },
+                { role: "user", content: message }
+            ];
             console.log(`open ai model: ${this.openaiOptions.model}`);
-            console.log(`prompt message: ${message}`);
+            console.log(`prompt message: ${messages}`);
             try {
-                response = await pRetry(() => this.api.getCompletions(this.openaiOptions.model, [message], opts), {
+                response = await pRetry(() => this.api.getChatCompletions(this.openaiOptions.model, messages, opts), {
                     retries: this.options.openaiRetries
                 });
             }
@@ -3576,7 +3588,7 @@ class AzureBot {
         }
         let responseText = '';
         if (response != null) {
-            responseText = response.choices[0].text;
+            responseText = response.choices[0].message?.content ?? '';
         }
         else {
             (0,core.warning)('openai response is null');

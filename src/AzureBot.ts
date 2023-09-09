@@ -3,7 +3,7 @@ import './fetch-polyfill'
 import {info, setFailed, warning} from '@actions/core'
 import pRetry from 'p-retry'
 import {OpenAIOptions, Options} from './options'
-import { AzureKeyCredential, Completions, GetCompletionsOptions, OpenAIClient } from '@azure/openai';
+import { AzureKeyCredential, ChatCompletions, GetChatCompletionsOptions, GetCompletionsOptions, OpenAIClient } from '@azure/openai';
 
 // define type to save parentMessageId and conversationId
 export interface Ids {
@@ -18,9 +18,18 @@ export class AzureBot {
 
   private readonly openaiOptions: OpenAIOptions
 
+  private readonly systemMessage: string
+
   constructor(options: Options, openaiOptions: OpenAIOptions) {
     this.options = options
     this.openaiOptions = openaiOptions
+    const currentDate = new Date().toISOString().split('T')[0]
+    this.systemMessage = `${options.systemMessage} 
+    Knowledge cutoff: ${openaiOptions.tokenLimits.knowledgeCutOff}
+    Current date: ${currentDate}
+    
+    IMPORTANT: Entire response must be in the language with ISO code: ${options.language}
+        `
     if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_BASE_URL) {
         this.api = new OpenAIClient(process.env.OPENAI_API_BASE_URL, new AzureKeyCredential(process.env.OPENAI_API_KEY));
     } else {
@@ -51,10 +60,10 @@ export class AzureBot {
       return ['', {}]
     }
 
-    let response: Completions | undefined
+    let response: ChatCompletions | undefined
 
     if (this.api != null) {
-      const opts: GetCompletionsOptions = {
+      const opts: GetChatCompletionsOptions = {
         model: this.openaiOptions.model,
         maxTokens: this.openaiOptions.tokenLimits.maxTokens,
         temperature: this.options.openaiModelTemperature
@@ -62,10 +71,16 @@ export class AzureBot {
     //   if (ids.parentMessageId) {
     //     opts.parentMessageId = ids.parentMessageId
     //   }
-      console.log(`open ai model: ${this.openaiOptions.model}`)
-      console.log(`prompt message: ${message}`)
+     const messages = [
+        { role: "system", content: this.systemMessage },
+        { role: "user", content: message }
+     ];
+
+     console.log(`open ai model: ${this.openaiOptions.model}`)
+     console.log(`prompt message: ${messages}`)
+
       try {
-        response = await pRetry(() => this.api!.getCompletions(this.openaiOptions.model, [message], opts), {
+        response = await pRetry(() => this.api!.getChatCompletions(this.openaiOptions.model, messages, opts), {
           retries: this.options.openaiRetries
         })
       } catch (e: unknown) {
@@ -85,7 +100,7 @@ export class AzureBot {
     }
     let responseText = ''
     if (response != null) {
-      responseText = response.choices[0].text
+      responseText = response.choices[0].message?.content ?? '';
     } else {
       warning('openai response is null')
     }
