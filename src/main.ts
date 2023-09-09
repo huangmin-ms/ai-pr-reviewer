@@ -10,6 +10,7 @@ import {OpenAIOptions, Options} from './options'
 import {Prompts} from './prompts'
 import {codeReview} from './review'
 import {handleReviewComment} from './review-comment'
+import { AzureBot } from './AzureBot'
 
 async function run(): Promise<void> {
   const options: Options = new Options(
@@ -42,9 +43,9 @@ async function run(): Promise<void> {
 
   // Create two bots, one for summary and one for review
 
-  let lightBot: Bot | null = null
+  let lightBot: AzureBot | null = null
   try {
-    lightBot = new Bot(
+    lightBot = new AzureBot(
       options,
       new OpenAIOptions(options.openaiLightModel, options.lightTokenLimits)
     )
@@ -55,9 +56,9 @@ async function run(): Promise<void> {
     return
   }
 
-  let heavyBot: Bot | null = null
+  let heavyBot: AzureBot | null = null
   try {
-    heavyBot = new Bot(
+    heavyBot = new AzureBot(
       options,
       new OpenAIOptions(options.openaiHeavyModel, options.heavyTokenLimits)
     )

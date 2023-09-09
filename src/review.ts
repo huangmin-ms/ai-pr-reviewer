@@ -17,6 +17,7 @@ import {octokit} from './octokit'
 import {type Options} from './options'
 import {type Prompts} from './prompts'
 import {getTokenCount} from './tokenizer'
+import { AzureBot } from './AzureBot'
 
 // eslint-disable-next-line camelcase
 const context = github_context
@@ -25,8 +26,8 @@ const repo = context.repo
 const ignoreKeyword = '@coderabbitai: ignore'
 
 export const codeReview = async (
-  lightBot: Bot,
-  heavyBot: Bot,
+  lightBot: AzureBot,
+  heavyBot: AzureBot,
   options: Options,
   prompts: Prompts
 ): Promise<void> => {

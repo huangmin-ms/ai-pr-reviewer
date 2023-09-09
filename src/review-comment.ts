@@ -13,6 +13,7 @@ import {octokit} from './octokit'
 import {type Options} from './options'
 import {type Prompts} from './prompts'
 import {getTokenCount} from './tokenizer'
+import { AzureBot } from './AzureBot'
 
 // eslint-disable-next-line camelcase
 const context = github_context
@@ -20,7 +21,7 @@ const repo = context.repo
 const ASK_BOT = '@coderabbitai'
 
 export const handleReviewComment = async (
-  heavyBot: Bot,
+  heavyBot: AzureBot,
   options: Options,
   prompts: Prompts
 ) => {
