@@ -3570,7 +3570,7 @@ class AzureBot {
                 { role: "user", content: message }
             ];
             console.log(`open ai model: ${this.openaiOptions.model}`);
-            console.log(`prompt message: ${messages}`);
+            console.log(`prompt message: ${JSON.stringify(messages)}`);
             try {
                 response = await pRetry(() => this.api.getChatCompletions(this.openaiOptions.model, messages, opts), {
                     retries: this.options.openaiRetries
