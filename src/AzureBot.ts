@@ -62,6 +62,8 @@ export class AzureBot {
     //   if (ids.parentMessageId) {
     //     opts.parentMessageId = ids.parentMessageId
     //   }
+      console.log(`open ai model: ${this.openaiOptions.model}`)
+      console.log(`prompt message: ${message}`)
       try {
         response = await pRetry(() => this.api!.getCompletions(this.openaiOptions.model, [message], opts), {
           retries: this.options.openaiRetries
