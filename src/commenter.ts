@@ -7,7 +7,7 @@ import {octokit} from './octokit'
 const context = github_context
 const repo = context.repo
 
-export const COMMENT_GREETING = `<img src="https://github.com/huangmin-ms/ai-pr-reviewer/blob/azure-bot/docs/images/learn-reference-pr-assistant.png" alt="Image description" width="20" height="20">   Learn Reference PR Assistant`
+export const COMMENT_GREETING = `**Learn Reference PR Assistant**`
 
 export const COMMENT_TAG =
   '<!-- This is an auto-generated comment by OSS CodeRabbit -->'

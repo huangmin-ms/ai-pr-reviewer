@@ -3638,7 +3638,7 @@ class AzureBot {
 // eslint-disable-next-line camelcase
 const context = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
 const repo = context.repo;
-const COMMENT_GREETING = `<img src="https://github.com/huangmin-ms/ai-pr-reviewer/blob/azure-bot/docs/images/learn-reference-pr-assistant.png" alt="Image description" width="20" height="20">   Learn Reference PR Assistant`;
+const COMMENT_GREETING = `**Learn Reference PR Assistant**`;
 const COMMENT_TAG = '<!-- This is an auto-generated comment by OSS CodeRabbit -->';
 const COMMENT_REPLY_TAG = '<!-- This is an auto-generated reply by OSS CodeRabbit -->';
 const SUMMARIZE_TAG = '<!-- This is an auto-generated comment: summarize by OSS CodeRabbit -->';
