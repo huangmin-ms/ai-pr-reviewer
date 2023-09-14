@@ -394,22 +394,24 @@ ${
     // and ask the bot to summarize the summaries
     for (let i = 0; i < summaries.length; i += batchSize) {
       const summariesBatch = summaries.slice(i, i + batchSize)
+      inputs.newCauses = ''
       for (const [filename, summary] of summariesBatch) {
-        inputs.rawSummary += `---
+        inputs.newCauses += `---
 ${filename}: ${summary}
 `
       }
       // ask chatgpt to summarize the summaries
       const [summarizeResp] = await heavyBot.chat(
-        prompts.renderSummarizeChangesets(inputs),
+        prompts.renderSummarizeCauses(inputs),
         {}
       )
       if (summarizeResp === '') {
         warning('summarize: nothing obtained from openai')
       } else {
-        inputs.rawSummary = summarizeResp
+        inputs.rawCauses = summarizeResp
       }
     }
+    inputs.rawSummary = inputs.rawCauses
   }
 
   // final summary

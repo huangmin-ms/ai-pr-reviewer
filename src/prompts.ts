@@ -63,6 +63,23 @@ changesets using the same format as the input.
 $raw_summary
 `
 
+  summarizeCauses = `Provided below are the \`causes analyze\` that lead to the changes in this pull request.
+\`\`\`
+$raw_Causes
+\`\`\`
+Now we have some new causes per file. Your task is to merge the following causes (per file) into the \`causes analyze\`. 
+\`\`\`
+$new_Causes
+\`\`\`
+Do not provide addtional words like summary or investigation. You should respond with the updated \`causes analyze\` using the following format.
+\`\`\`
+Pattern #N: 
+Cause #N: 
+Files: 
+Count: 
+\`\`\`
+`
+
   summarizePrefix = `Here is the summary of changes you have generated for files:
       \`\`\`
       $raw_summary
@@ -255,6 +272,10 @@ $comment
 
   renderSummarizeChangesets(inputs: Inputs): string {
     return inputs.render(this.summarizeChangesets)
+  }
+  
+  renderSummarizeCauses(inputs: Inputs): string {
+    return inputs.render(this.summarizeCauses)
   }
 
   renderSummarize(inputs: Inputs): string {
