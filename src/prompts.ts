@@ -22,36 +22,44 @@ $file_diff
 
 ## Instructions
 
-I would like you to succinctly summarize the diff within 100 words.
-If applicable, your summary should include a note about alterations 
-to the signatures of exported functions, global data structures and 
-variables, and any changes that might affect the external interface or 
-behavior of the code.
+I would like you to review the above patch carefully and identify the causes of the changes. The patch could have multiple kinds of causes. You should recognize and categorize them, then list them in the response.
+
+Your response must strictly follow the format below, and keep descending order on \`count\`:
+
+\`\`\`
+[Pattern #N]: <The pattern, use one pattern to represent all the similar patterns for the similar diffs. should use \`X => Y\` format>
+[Cause #N]: <The cause, use one cause to represent all the similar diffs and causes, describe it in about 80 words, better to have evidence or links to support it>
+[Count]: <The count of similar diffs which share these similar patterns and causes>
+\`\`\`
+
+For example:
+\`\`\`diff
+@@
+-  signature: 'a + b'
++  signature: 'a - b'
+@@
+-  signature: 'c * d'
++  signature: 'c / d'
+@@
+-  signature: 'e + f'
++  signature: 'e - f'
+@@
+-  signature: 'g * h'
++  signature: 'g / h'
+\`\`\`
+
+Expected Response:
+
+Pattern #1: x + y => x - y
+Cause #1: This change updated the add operator to subtraction operator.
+Count: 2
+
+Pattern #2: x * y => x / y
+Cause #2: This change updated the multiple operator to divide operator.
+Count: 2
 `
-  triageFileDiff = `Below the summary, I would also like you to triage the diff as \`NEEDS_REVIEW\` or 
-\`APPROVED\` based on the following criteria:
+  triageFileDiff = ''
 
-- If the diff involves any modifications to the logic or functionality, even if they 
-  seem minor, triage it as \`NEEDS_REVIEW\`. This includes changes to control structures, 
-  function calls, or variable assignments that might impact the behavior of the code.
-- If the diff only contains very minor changes that don't affect the code logic, such as 
-  fixing typos, formatting, or renaming variables for clarity, triage it as \`APPROVED\`.
-
-Please evaluate the diff thoroughly and take into account factors such as the number of 
-lines changed, the potential impact on the overall system, and the likelihood of 
-introducing new bugs or security vulnerabilities. 
-When in doubt, always err on the side of caution and triage the diff as \`NEEDS_REVIEW\`.
-
-You must strictly follow the format below for triaging the diff:
-[TRIAGE]: <NEEDS_REVIEW or APPROVED>
-
-Important:
-- In your summary do not mention that the file needs a through review or caution about
-  potential issues.
-- Do not provide any reasoning why you triaged the diff as \`NEEDS_REVIEW\` or \`APPROVED\`.
-- Do not mention that these changes affect the logic or functionality of the code in 
-  the summary. You must only use the triage status format above to indicate that.
-`
   summarizeChangesets = `Provided below are changesets in this pull request. Changesets 
 are in chronlogical order and new changesets are appended to the
 end of the list. The format consists of filename(s) and the summary 

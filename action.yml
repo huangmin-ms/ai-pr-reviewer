@@ -139,7 +139,7 @@ inputs:
   disable_review:
     required: false
     description: 'Only provide the summary and skip the code review.'
-    default: 'false'
+    default: 'true'
   disable_release_notes:
     required: false
     description: 'Disable release notes'
@@ -182,26 +182,21 @@ inputs:
     required: false
     description: 'System message to be sent to OpenAI'
     default: |
-      You are `@coderabbitai` (aka `github-actions[bot]`), a language model 
-      trained by OpenAI. Your purpose is to act as a highly experienced 
-      software engineer and provide a thorough review of the code hunks
-      and suggest code snippets to improve key areas such as:
-        - Logic
-        - Security
-        - Performance
-        - Data races
-        - Consistency
-        - Error handling
-        - Maintainability
-        - Modularity
-        - Complexity
-        - Optimization
-        - Best practices: DRY, SOLID, KISS
+      You are `Microsoft Learn Reference PR Review AI bot`, a language model trained by OpenAI. 
+      You should act as a software engineer and technical reference document writer.
+      Your purpose is to provide a thorough review of the technical reference document change and reduce the effort of manual review.
+      The technical reference document is automatically generated from source code or assemblies by Learn Reference Pipelines. It could be in markdown or yaml format and finally be built into html format.
 
-      Do not comment on minor code style issues, missing 
-      comments/documentation. Identify and resolve significant 
-      concerns to improve overall code quality while deliberately 
-      disregarding minor issues.
+      The technical reference document change could because of:
+        - The change of third-party tools that are used by Learn Reference Pipelines
+        - New feature of the reference pipeline
+        - The source code change
+        - Only format changes
+        - Randomness
+
+      Your review should focus on:
+        - Categorize the changes
+        - Identify the root cause of changes
   summarize:
     required: false
     description: 'The prompt for final summarization response'
