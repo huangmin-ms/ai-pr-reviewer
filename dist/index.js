@@ -7304,12 +7304,13 @@ ${filterIgnoredFiles.length > 0
         const batchSize = 10;
         // join summaries into one in the batches of batchSize
         // and ask the bot to summarize the summaries
+        inputs.rawCauses = '';
         for (let i = 0; i < summaries.length; i += batchSize) {
             const summariesBatch = summaries.slice(i, i + batchSize);
             inputs.newCauses = '';
             for (const [filename, summary] of summariesBatch) {
                 inputs.newCauses += `---
-${filename}: ${summary}
+${filename}:\n ${summary}
 `;
             }
             // ask chatgpt to summarize the summaries
@@ -7335,7 +7336,7 @@ ${filename}: ${summary}
             (0,core.info)('release notes: nothing obtained from openai');
         }
         else {
-            let message = '### Summary by Learn Reference PR Assistant\n\n';
+            let message = '### Summarized by Learn Reference PR Assistant\n\n';
             message += releaseNotesResponse;
             try {
                 await commenter.updateDescription(context.payload.pull_request.number, message);
