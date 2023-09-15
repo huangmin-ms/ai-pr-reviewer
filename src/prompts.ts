@@ -89,15 +89,21 @@ $raw_Causes
 \`\`\`
 
 Your task is deduplicate and group together the related/similar \`cause\` into a single \`cause\`. When you find duplicated \`cause\`, you should follow the rules to create a merged \`cause\`:
-* \`Cause\` should be summarized from the duplicated \`causes\`.
-* The merged \`cause\` should have only one \`Pattern\` that is summarized/abstracted from the duplicated \`causes\`.
+* \`Cause\` should be summarized from the duplicated \`causes\`. 
+* The merged \`cause\` should have only one \`Pattern\` that is abstracted from the duplicated \`causes\`. You can use some place holder to represent a generic abstracted pattern. 
+  For example, when you find two duplcated casue with pattern \`Optional[str] => str | None\` and \`Optional[int] => int | None\`, you can create a generic abstracted pattern \`Optional[type] => type | None\`.
 * \`Files\` should be merged from the duplicated \`causes\`.
 * \`Count\` should be sum up from the duplicated \`causes\`.
 
 Your response is the updated \`cause\` list. Please follow the rules:
 * The list should be strictly ordered by the field \`Count\` of each \`cause\` , from large to small.
 * Do not provide addtional words like summary or investigation. The response should follow \`cause\` format.
-
+  \`\`\`
+  Pattern #N: 
+  Cause #N: 
+  Files: 
+  Count: 
+  \`\`\`
 `
 
   summarizePrefix = `Here is the summary of changes you have generated for files:
