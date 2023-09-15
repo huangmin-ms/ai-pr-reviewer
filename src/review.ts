@@ -395,10 +395,9 @@ ${
     inputs.rawCauses = ''
     for (let i = 0; i < summaries.length; i += batchSize) {
       const summariesBatch = summaries.slice(i, i + batchSize)
-      inputs.newCauses = ''
       for (const [filename, summary] of summariesBatch) {
-        inputs.newCauses += `---
-${filename}:\n ${summary}
+        inputs.rawCauses += `
+${summary}
 `
       }
       // ask chatgpt to summarize the summaries

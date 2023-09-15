@@ -4,7 +4,6 @@ export class Inputs {
   description: string
   rawSummary: string
   rawCauses: string
-  newCauses: string
   shortSummary: string
   filename: string
   fileContent: string
@@ -20,7 +19,6 @@ export class Inputs {
     description = 'no description provided',
     rawSummary = '',
     rawCauses = '',
-    newCauses = '',
     shortSummary = '',
     filename = '',
     fileContent = 'file contents cannot be provided',
@@ -35,7 +33,6 @@ export class Inputs {
     this.description = description
     this.rawSummary = rawSummary
     this.rawCauses = rawCauses
-    this.newCauses = newCauses
     this.shortSummary = shortSummary
     this.filename = filename
     this.fileContent = fileContent
@@ -53,7 +50,6 @@ export class Inputs {
       this.description,
       this.rawSummary,
       this.rawCauses,
-      this.newCauses,
       this.shortSummary,
       this.filename,
       this.fileContent,
@@ -83,9 +79,6 @@ export class Inputs {
     }
     if (this.rawCauses) {
       content = content.replace('$raw_Causes', this.rawCauses)
-    }
-    if (this.newCauses) {
-      content = content.replace('$new_Causes', this.newCauses)
     }
     if (this.shortSummary) {
       content = content.replace('$short_summary', this.shortSummary)

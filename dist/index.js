@@ -4272,7 +4272,6 @@ class Inputs {
     description;
     rawSummary;
     rawCauses;
-    newCauses;
     shortSummary;
     filename;
     fileContent;
@@ -4281,13 +4280,12 @@ class Inputs {
     diff;
     commentChain;
     comment;
-    constructor(systemMessage = '', title = 'no title provided', description = 'no description provided', rawSummary = '', rawCauses = '', newCauses = '', shortSummary = '', filename = '', fileContent = 'file contents cannot be provided', fileDiff = 'file diff cannot be provided', patches = '', diff = 'no diff', commentChain = 'no other comments on this patch', comment = 'no comment provided') {
+    constructor(systemMessage = '', title = 'no title provided', description = 'no description provided', rawSummary = '', rawCauses = '', shortSummary = '', filename = '', fileContent = 'file contents cannot be provided', fileDiff = 'file diff cannot be provided', patches = '', diff = 'no diff', commentChain = 'no other comments on this patch', comment = 'no comment provided') {
         this.systemMessage = systemMessage;
         this.title = title;
         this.description = description;
         this.rawSummary = rawSummary;
         this.rawCauses = rawCauses;
-        this.newCauses = newCauses;
         this.shortSummary = shortSummary;
         this.filename = filename;
         this.fileContent = fileContent;
@@ -4298,7 +4296,7 @@ class Inputs {
         this.comment = comment;
     }
     clone() {
-        return new Inputs(this.systemMessage, this.title, this.description, this.rawSummary, this.rawCauses, this.newCauses, this.shortSummary, this.filename, this.fileContent, this.fileDiff, this.patches, this.diff, this.commentChain, this.comment);
+        return new Inputs(this.systemMessage, this.title, this.description, this.rawSummary, this.rawCauses, this.shortSummary, this.filename, this.fileContent, this.fileDiff, this.patches, this.diff, this.commentChain, this.comment);
     }
     render(content) {
         if (!content) {
@@ -4318,9 +4316,6 @@ class Inputs {
         }
         if (this.rawCauses) {
             content = content.replace('$raw_Causes', this.rawCauses);
-        }
-        if (this.newCauses) {
-            content = content.replace('$new_Causes', this.newCauses);
         }
         if (this.shortSummary) {
             content = content.replace('$short_summary', this.shortSummary);
@@ -6437,6 +6432,9 @@ class Prompts {
 $description
 \`\`\`
 
+## Diff File
+$filename
+
 ## Diff
 
 \`\`\`diff
@@ -6452,6 +6450,7 @@ Your response must strictly follow the format below, and keep descending order o
 \`\`\`
 [Pattern #N]: <The pattern, use one pattern to represent all the similar patterns for the similar diffs. should use \`X => Y\` format>
 [Cause #N]: <The cause, use one cause to represent all the similar diffs and causes, describe it in about 80 words, better to have evidence or links to support it>
+[Files]: <The file name of this diff, mentioned in the section "Diff File">
 [Count]: <The count of similar diffs which share these similar patterns and causes>
 \`\`\`
 
@@ -6492,21 +6491,29 @@ changesets using the same format as the input.
 
 $raw_summary
 `;
-    summarizeCauses = `Provided below are the \`causes analyze\` that lead to the changes in this pull request.
-\`\`\`
-$raw_Causes
-\`\`\`
-Now we have some new causes per file. Your task is to merge the following causes (per file) into the \`causes analyze\`. 
-\`\`\`
-$new_Causes
-\`\`\`
-Do not provide addtional words like summary or investigation. You should respond with the updated \`causes analyze\` using the following format.
+    summarizeCauses = `Keep in mind that a \`cause\` is an object that consist of the following fields:
 \`\`\`
 Pattern #N: 
 Cause #N: 
 Files: 
 Count: 
 \`\`\`
+
+Provided below are the \`cause\` list that lead to the changes of this pull request. Newly added \`cause\` are appended to the end of the list.
+\`\`\`
+$raw_Causes
+\`\`\`
+
+Your task is deduplicate and group together the related/similar \`cause\` into a single \`cause\`. When you find duplicated \`cause\`, you should follow the rules to create a merged \`cause\`:
+* \`Cause\` should be summarized from the duplicated \`causes\`.
+* The merged \`cause\` should have only one \`Pattern\` that is summarized/abstracted from the duplicated \`causes\`.
+* \`Files\` should be merged from the duplicated \`causes\`.
+* \`Count\` should be sum up from the duplicated \`causes\`.
+
+Your response is the updated \`cause\` list. Please follow the rules:
+* The list should be strictly ordered by the field \`Count\` of each \`cause\` , from large to small.
+* Do not provide addtional words like summary or investigation. The response should follow \`cause\` format.
+
 `;
     summarizePrefix = `Here is the summary of changes you have generated for files:
       \`\`\`
@@ -7307,10 +7314,9 @@ ${filterIgnoredFiles.length > 0
         inputs.rawCauses = '';
         for (let i = 0; i < summaries.length; i += batchSize) {
             const summariesBatch = summaries.slice(i, i + batchSize);
-            inputs.newCauses = '';
             for (const [filename, summary] of summariesBatch) {
-                inputs.newCauses += `---
-${filename}:\n ${summary}
+                inputs.rawCauses += `
+${summary}
 `;
             }
             // ask chatgpt to summarize the summaries
