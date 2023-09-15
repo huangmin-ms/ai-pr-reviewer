@@ -89,9 +89,11 @@ $raw_Causes
 \`\`\`
 
 Your task is deduplicate and group together the related/similar \`cause\` into a single \`cause\`. When you find duplicated \`cause\`, you should follow the rules to create a merged \`cause\`:
+* Do not merge causes that have not similar \`Pattern\`
 * \`Cause\` should be summarized from the duplicated \`causes\`. 
-* The merged \`cause\` should have only one \`Pattern\` that is abstracted from the duplicated \`causes\`. You can use some place holder to represent a generic abstracted pattern. 
-  For example, when you find two duplcated casue with pattern \`Optional[str] => str | None\` and \`Optional[int] => int | None\`, you can create a generic abstracted pattern \`Optional[type] => type | None\`.
+* The merged \`cause\` should have only one \`Pattern\` that is abstracted from the duplicated \`causes\`. You can use some place holder to represent a generic abstracted pattern. For examples,
+  when you find two duplcated casue with pattern \`Optional[str] => str | None\` and \`Optional[int] => int | None\`, you can create a generic abstracted pattern \`Optional[type] => type | None\`.
+  when you find two duplcated casue with pattern \`azure.storage.blob._models.X => X\` and \`azure.storage.blob._blob_client.BlobClient => BlobClient\`, you can create a generic abstracted pattern \`FullPath.Classname => Classname\`.
 * \`Files\` should be merged from the duplicated \`causes\`.
 * \`Count\` should be sum up from the duplicated \`causes\`.
 
