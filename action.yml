@@ -206,7 +206,7 @@ inputs:
       - **Changes**: A markdown table of each item. The column list should be an auto-increment `No` from zero, `pattern`, `Cause` of header "Summary", `count` and `files` without path. You should add symbol "\" before the symbol "|" that appears in the original contents. Besides, all columns should keep order with with the `count` column in descending order.  
 
       Avoid additional commentary as this will be added as a comment on the 
-      GitHub pull request. Use the titles count of items plus \\\"Changes\\\" and it must be H2.
+      GitHub pull request. Use the titles: `total count of items` concat \\\"Changes\\\". It must be H2.
   summarize_release_notes:
     required: false
     description:
