@@ -203,10 +203,10 @@ inputs:
     default: |
       Provide your final response in markdown with the following content:
 
-      - **Changes**: A markdown table of each item. The column list should be the number of this item `#N`, `pattern` and `Cause` and `count` and `files`. 
+      - **Changes**: A markdown table of each item. The column list should be `pattern`, `Cause` of header "Summary", `Count` and `Files` without path.  
 
       Avoid additional commentary as this will be added as a comment on the 
-      GitHub pull request. Use the titles \"Changes\" and it must be H2.
+      GitHub pull request. Use the titles count of items plus \\\"Changes\\\" and it must be H2.
   summarize_release_notes:
     required: false
     description:
